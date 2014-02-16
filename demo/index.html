@@ -4,6 +4,7 @@
 <head>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script src="webgl-utils.js"></script>
+<script src="profiler.js"></script>
 </head>
 
 <body>
@@ -17,8 +18,11 @@
 <span id="error"></span>
 
 <script>
-console.log("lol js");
-var gl = glul.initGL($('#viewport').get(0));
+
+var run = function () {
+	console.log("lol js");
+	var gl = glul.initGL($('#viewport').get(0));
+}
 </script>
 </body>
 </html>
