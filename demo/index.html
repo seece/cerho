@@ -35,13 +35,12 @@ var initialize = function () {
 	var width = $(window).get(0).clientWidth - 0;
 	var height = width * (9.0/16.0);
 
-	console.log(width, height);
 	$('#viewport').attr("width", width);
 	$('#viewport').attr("height", height);
-	demo.init($('#viewport').get(0));
 
 	Assets.loadAll(function () {
 				console.log("Demo assets: ", Assets.store, Assets.images)
+				demo.init($('#viewport').get(0));
 				demo.run();	
 			}, 
 			function (filename) {

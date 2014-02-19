@@ -44,6 +44,8 @@ var Assets = (function ($){
 					return;
 				}
 
+				console.log("Loaded image ", img);
+
 				deferred.resolve(url);
 			};
 
