@@ -2,13 +2,17 @@
 <html>
 
 <head>
+<link rel="stylesheet" href="css/style.css">
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script src="webgl-utils.js"></script>
 <script src="profiler.js"></script>
+<script src="assets.js"></script>
+<script src="effect.js"></script>
+<script src="demo.js"></script>
 </head>
 
 <body>
-<canvas id="viewport" width="800px" height="480px">
+<canvas id="viewport">
 
 </canvas>
 
@@ -18,11 +22,35 @@
 <span id="error"></span>
 
 <script>
-
-var run = function () {
-	console.log("lol js");
-	var gl = glul.initGL($('#viewport').get(0));
+var queueAssets = function () {
+	Assets.queue("vertex.shader");
+	Assets.queueImage("eka.png");
 }
+
+var initialize = function () {
+	var demo = Demo;
+
+	queueAssets();
+
+	var width = $(window).get(0).clientWidth - 0;
+	var height = width * (9.0/16.0);
+
+	console.log(width, height);
+	$('#viewport').attr("width", width);
+	$('#viewport').attr("height", height);
+	demo.init($('#viewport').get(0));
+
+	Assets.loadAll(function () {
+				console.log("Demo assets: ", Assets.store, Assets.images)
+				demo.run();	
+			}, 
+			function (filename) {
+				console.log("couldn't load asset", filename);	
+			});
+}
+
+initialize();
+
 </script>
 </body>
 </html>

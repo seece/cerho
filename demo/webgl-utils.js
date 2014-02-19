@@ -1,16 +1,20 @@
 /*
  * This is the GLUL (OpenGL Ullatus Library)
-*/
+ *
+ * Most of this code has been copy-pasted from 
+ * http://devfiles.myopera.com/articles/8442/webgl-utils.js 
+ *
+ */
 var glul = (function() {
 	/*
-	window.onerror = function(msg, url, lineno) {
-		alert(url + '(' + lineno + '): ' + msg);
-	}
-	*/
+	   window.onerror = function(msg, url, lineno) {
+	   alert(url + '(' + lineno + '): ' + msg);
+	   }
+	   */
 
 	function getWebGLContext(canvas) {
 		gl = canvas.getContext("experimental-webgl");
-		
+
 		return gl;
 	}
 
@@ -26,7 +30,7 @@ var glul = (function() {
 		if (!gl) {
 			alert("Could not initialise WebGL, sorry :D");
 		}
-		
+
 		return gl;
 	}
 
@@ -63,12 +67,12 @@ var glul = (function() {
 		vertexPosBuffer.numItems = 4;
 
 		/*
-		 2___3
-		 |\  |
-		 | \ |
-		 |__\|
-		 0   1
-		*/
+		   2___3
+		   |\  |
+		   | \ |
+		   |__\|
+		   0   1
+		   */
 		return vertexPosBuffer;
 	}
 
@@ -135,23 +139,23 @@ var glul = (function() {
 		for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
 			window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
 			window.cancelRequestAnimationFrame = window[vendors[x]+
-			  'CancelRequestAnimationFrame'];
+		'CancelRequestAnimationFrame'];
 		}
 
 		if (!window.requestAnimationFrame)
-			window.requestAnimationFrame = function(callback, element) {
-				var currTime = new Date().getTime();
-				var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-				var id = window.setTimeout(function() { callback(currTime + timeToCall); },
-				  timeToCall);
-				lastTime = currTime + timeToCall;
-				return id;
-			};
+		window.requestAnimationFrame = function(callback, element) {
+			var currTime = new Date().getTime();
+			var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+			var id = window.setTimeout(function() { callback(currTime + timeToCall); },
+				timeToCall);
+			lastTime = currTime + timeToCall;
+			return id;
+		};
 
-		if (!window.cancelAnimationFrame)
-			window.cancelAnimationFrame = function(id) {
-				clearTimeout(id);
-			};
+	if (!window.cancelAnimationFrame)
+		window.cancelAnimationFrame = function(id) {
+			clearTimeout(id);
+		};
 	}())
 
 	return {
