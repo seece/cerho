@@ -6,8 +6,10 @@ var Demo = (function($, assets, glul) {
 	var textures = {};
 	var vshader;
 	var shaders = {};
-	var programs = []; 
+	//var programs = []; 
+	var programs = {}; 
 	var effects = {};
+	var playlist = new Playlist();
 
 	var quadVerts;
 	var quadInds;
@@ -15,6 +17,8 @@ var Demo = (function($, assets, glul) {
 	var getBasename = function (path) {
 		return path.split(/[\\/]/).pop();
 	}
+
+	TODO use an object map function to iterate through programs
 
 	/* Compiles and links multiple fragment shaders with a single vertex shader */
 	var createPrograms = function (vertexshader, frags) {
@@ -24,7 +28,8 @@ var Demo = (function($, assets, glul) {
 			var fstr = Assets.fragmentshaders[frag];
 			console.log("Compiling shader", frag);
 			var program = glul.createProgram(vertexshader, fstr);
-			programs.push(program);
+			//programs.push(program);
+			programs[frag] = program;
 		}
 	}
 
@@ -99,12 +104,12 @@ var Demo = (function($, assets, glul) {
 		});
 
 		effects["test"] = new Effect(programs[0], {});
+		playlist.add(new PlaylistEntry("test", 0, 10.0));
 
 		prof.end("init");
 
 		console.log(prof.entries);
-
-
+		console.log(playlist);
 	}
 
 	demo.run = function() {
@@ -121,11 +126,19 @@ var Demo = (function($, assets, glul) {
 		gl.clearColor(0.2, 0.2, 0.2, 1.0);
 		gl.clear(gl.COLOR_BUFFER_BIT);
 
-		effects["test"].render({}, function (prog) {
-			set2DVertexAttribPointer(prog);
-			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, quadInds)
-			gl.drawElements(gl.TRIANGLES, quadInds.numItems, gl.UNSIGNED_SHORT, 0);
-		});
+		var eff = playlist.getCurrent(5.0);
+
+		if (!(eff.effect in effects)) {
+			console.log("Invalid effect name in playlist: ", eff);
+
+		} else {
+			effects[eff.effect].render({}, function (prog) {
+				set2DVertexAttribPointer(prog);
+				gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, quadInds)
+				gl.drawElements(gl.TRIANGLES, quadInds.numItems, gl.UNSIGNED_SHORT, 0);
+			});
+		}
+
 	}
 
 	return demo;

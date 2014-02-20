@@ -8,6 +8,7 @@
 <script src="profiler.js"></script>
 <script src="assets.js"></script>
 <script src="effect.js"></script>
+<script src="playlist.js"></script>
 <script src="demo.js"></script>
 </head>
 
@@ -24,7 +25,8 @@
 <script>
 var queueAssets = function () {
 	Assets.queueVertexShader("shader.vert");
-	Assets.queueFragmentShader("shader.frag");
+	Assets.queueFragmentShader("red.frag");
+	Assets.queueFragmentShader("blue.frag");
 	Assets.queueImage("eka.png");
 }
 

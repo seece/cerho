@@ -18,8 +18,7 @@ Effect.prototype.render = function (params, quadDrawFunc) {
         t = params["time"];
     }
 
-    console.log("Rendering with params", params, this.program);
+    //console.log("Rendering with params", params, this.program);
     gl.useProgram(this.program);
     quadDrawFunc(this.program);
-
 }
