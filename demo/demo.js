@@ -7,6 +7,7 @@ var Demo = (function($, assets, glul) {
 	var vshader;
 	var shaders = {};
 	var programs = []; 
+	var effects = {};
 
 	var quadVerts;
 	var quadInds;
@@ -97,9 +98,13 @@ var Demo = (function($, assets, glul) {
 			set2DVertexAttribPointer(prog, quadVerts.itemSize);
 		});
 
+		effects["test"] = new Effect(programs[0], {});
+
 		prof.end("init");
 
 		console.log(prof.entries);
+
+
 	}
 
 	demo.run = function() {
@@ -116,12 +121,11 @@ var Demo = (function($, assets, glul) {
 		gl.clearColor(0.2, 0.2, 0.2, 1.0);
 		gl.clear(gl.COLOR_BUFFER_BIT);
 
-		var prog = programs[0];
-
-		gl.useProgram(prog);
-		set2DVertexAttribPointer(prog);
-		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, quadInds)
-		gl.drawElements(gl.TRIANGLES, quadInds.numItems, gl.UNSIGNED_SHORT, 0);
+		effects["test"].render({}, function (prog) {
+			set2DVertexAttribPointer(prog);
+			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, quadInds)
+			gl.drawElements(gl.TRIANGLES, quadInds.numItems, gl.UNSIGNED_SHORT, 0);
+		});
 	}
 
 	return demo;
