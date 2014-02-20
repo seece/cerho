@@ -24,7 +24,8 @@ var glul = (function() {
 			gl = getWebGLContext(canvas);
 			gl.viewportWidth = canvas.width;
 			gl.viewportHeight = canvas.height;
-			//gl.viewport(0, 0, gl.gl.viewportWidth, gl.viewportHeight);
+			gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+			console.log("Viewport size", gl.viewportWidth, gl.viewportHeight);
 		} catch(e) {
 		}
 		if (!gl) {
@@ -58,13 +59,22 @@ var glul = (function() {
 		return program;
 	}
 
+	/* Returns a list that contains the vertex buffer and the index buffer */
 	function screenQuad() {
-		var vertexPosBuffer = gl.createBuffer();
-		gl.bindBuffer(gl.ARRAY_BUFFER, vertexPosBuffer);
 		var vertices = [-1, -1, 1, -1, -1, 1, 1, 1];
+		var indices = [0, 1, 2, 1, 3, 2]; 
+
+		var vertexPosBuffer = gl.createBuffer();
+		var indexPosBuffer = gl.createBuffer();
+
+		gl.bindBuffer(gl.ARRAY_BUFFER, vertexPosBuffer);
 		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-		vertexPosBuffer.itemSize = 2;
+		vertexPosBuffer.itemSize = 2;	// item size in elements (floats)
 		vertexPosBuffer.numItems = 4;
+
+		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexPosBuffer);
+		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
+		indexPosBuffer.numItems = 6;
 
 		/*
 		   2___3
@@ -73,7 +83,7 @@ var glul = (function() {
 		   |__\|
 		   0   1
 		   */
-		return vertexPosBuffer;
+		return [vertexPosBuffer, indexPosBuffer];
 	}
 
 	function linkProgram(program) {

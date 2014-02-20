@@ -22,6 +22,8 @@ var Assets = (function ($){
 
 	obj.store = {};
 	obj.images = {};
+	obj.fragmentshaders = {};
+	obj.vertexshaders = {};
 
 	obj.loadAll = function(callback, onerror) {
 		$.when.apply($, promises).done(
@@ -61,13 +63,25 @@ var Assets = (function ($){
 		promises.push(def);
 	}
 
-	obj.queue = function(path) {
+	var queueAsset = function(path, map) {
 		var promise = $.get(path, null, function(data, status, jqXHR) {
-			obj.store[path] = data;
-			console.log("Loaded asset " + data, obj.store);
+			map[path] = data;
+			console.log("Loaded asset " + data);
 		}); 
 
 		promises.push(promise);
+	}
+
+	obj.queue = function(path) {
+		queueAsset(path, obj.store);
+	}
+
+	obj.queueFragmentShader = function (path) {
+		queueAsset(path, obj.fragmentshaders);
+	}
+	
+	obj.queueVertexShader = function (path) {
+		queueAsset(path, obj.vertexshaders);
 	}
 
 	return obj;

@@ -23,7 +23,8 @@
 
 <script>
 var queueAssets = function () {
-	Assets.queue("vertex.shader");
+	Assets.queueVertexShader("shader.vert");
+	Assets.queueFragmentShader("shader.frag");
 	Assets.queueImage("eka.png");
 }
 
@@ -39,7 +40,8 @@ var initialize = function () {
 	$('#viewport').attr("height", height);
 
 	Assets.loadAll(function () {
-				console.log("Demo assets: ", Assets.store, Assets.images)
+				console.log("Demo assets: ", Assets.store, Assets.images, 
+					Assets.vertexshaders, Assets.fragmentshaders)
 				demo.init($('#viewport').get(0));
 				demo.run();	
 			}, 

@@ -1,2 +1,0 @@
-test shader source
-{ } jes

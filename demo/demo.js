@@ -4,21 +4,44 @@ var Demo = (function($, assets, glul) {
 	var prof = new Profiler();
 	var gl;
 	var textures = {};
+	var vshader;
+	var shaders = {};
+	var programs = []; 
 
-	
-	var createTexture = function(image, parameters) {
-		console.log("Creating texture with ", image);
+	var quadVerts;
+	var quadInds;
+
+	var getBasename = function (path) {
+		return path.split(/[\\/]/).pop();
+	}
+
+	/* Compiles and links multiple fragment shaders with a single vertex shader */
+	var createPrograms = function (vertexshader, frags) {
+		vshader = glul.createShader(vertexshader, gl.VERTEX_SHADER);
+
+		for (var frag in frags) {
+			var fstr = Assets.fragmentshaders[frag];
+			console.log("Compiling shader", frag);
+			var program = glul.createProgram(vertexshader, fstr);
+			programs.push(program);
+		}
+	}
+
+	var createTexture = function(image, params) {
+		console.log("Creating texture with ", image, params);
 		var tex = gl.createTexture();
 		gl.bindTexture(gl.TEXTURE_2D, tex);
 		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
 
 		// Apply custom texture parameters.
-		for (var name in parameters) {
-			if (!parameters.hasOwnProperty(name)) {
+		for (var name in params) {
+			/*
+			if (!params.hasownproperty(name)) {
 				continue;
 			}
+			*/
 
-			gl.texParameteri(gl.TEXTURE_2D, name, parameters[name]);
+			gl.texParameteri(gl.TEXTURE_2D, name, params[name]);
 		}
 
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
@@ -29,7 +52,7 @@ var Demo = (function($, assets, glul) {
 	}
 
 	var generateTextures = function(images) {
-		console.log("Generating images");
+		console.log("Generating images", images);
 
 		for (var path in images) {
 			if (!images.hasOwnProperty(path)) {
@@ -42,18 +65,38 @@ var Demo = (function($, assets, glul) {
 			
 			var texture = createTexture(images[path], params);
 		}
+	}
 
+	var set2DVertexAttribPointer = function (prog, itemSize) {
+		gl.bindBuffer(gl.ARRAY_BUFFER, quadVerts);
+		prog.vertexPosAttrib = gl.getAttribLocation(prog, 'pos');
+		gl.enableVertexAttribArray(prog.vertexPosAttrib);
+		gl.vertexAttribPointer(prog.vertexPosAttrib, quadVerts.itemSize, gl.FLOAT, false, 0, 0);
 	}
 
 	demo.init = function(viewportElement) {
 		console.log("Initializing");
 		prof.begin("init");
 		gl = glul.initGL(viewportElement);
-		//var gl = glul.initGL($('#viewport').get(0));
 
 		prof.begin("texture gen");
 		generateTextures(Assets.images);
 		prof.end("texture gen");
+
+		prof.begin("shaders");
+		createPrograms(Assets.vertexshaders["shader.vert"], Assets.fragmentshaders);
+		prof.end("shaders");
+
+		var quad = glul.screenQuad();
+		quadVerts = quad[0];
+		quadInds = quad[1];
+
+		// Set all vertex attributes
+		programs.map(function (prog, index) {
+			gl.useProgram(prog);	
+			set2DVertexAttribPointer(prog, quadVerts.itemSize);
+		});
+
 		prof.end("init");
 
 		console.log(prof.entries);
@@ -72,6 +115,13 @@ var Demo = (function($, assets, glul) {
 	demo.draw = function() {
 		gl.clearColor(0.2, 0.2, 0.2, 1.0);
 		gl.clear(gl.COLOR_BUFFER_BIT);
+
+		var prog = programs[0];
+
+		gl.useProgram(prog);
+		set2DVertexAttribPointer(prog);
+		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, quadInds)
+		gl.drawElements(gl.TRIANGLES, quadInds.numItems, gl.UNSIGNED_SHORT, 0);
 	}
 
 	return demo;
