@@ -34,7 +34,10 @@ var Demo = (function($, assets, glul) {
         return obj;
     }
 
-	/* Compiles and links multiple fragment shaders with a single vertex shader */
+	/* Compiles and links multiple fragment shaders with a single vertex shader. 
+     *
+     * Each program will be given the basename of the corresponding fragment shader.
+     */
 	var createPrograms = function (vertexshader, frags) {
 		vshader = glul.createShader(vertexshader, gl.VERTEX_SHADER);
 
@@ -43,7 +46,8 @@ var Demo = (function($, assets, glul) {
 			console.log("Compiling shader", frag);
 			var program = glul.createProgram(vertexshader, fstr);
 			//programs.push(program);
-			programs[frag] = program;
+            var name = getBasename(frag);
+			programs[name] = program;
 		}
 	}
 
@@ -101,7 +105,7 @@ var Demo = (function($, assets, glul) {
 		prof.end("texture gen");
 
 		prof.begin("shaders");
-		createPrograms(Assets.vertexshaders["shader.vert"], Assets.fragmentshaders);
+		createPrograms(Assets.vertexshaders["shaders/shader.vert"], Assets.fragmentshaders);
 		prof.end("shaders");
 
 		var quad = glul.screenQuad();
