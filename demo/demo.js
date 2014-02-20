@@ -6,7 +6,7 @@ var Demo = (function($, assets, glul) {
 	var textures = {};
 	var vshader;
 	var shaders = {};
-	//var programs = []; 
+
 	var programs = {}; 
 	var effects = {};
 	var playlist = new Playlist();
@@ -18,7 +18,21 @@ var Demo = (function($, assets, glul) {
 		return path.split(/[\\/]/).pop();
 	}
 
-	TODO use an object map function to iterate through programs
+    /* 
+     * func(key, val, list)
+     * */
+    var mapmap = function (list, func) {
+        var obj = {};
+
+		for (var key in list) {
+			if (!list.hasOwnProperty(key)) 
+				continue;
+
+            obj[key] = func(key, list[key], list);
+		}
+
+        return obj;
+    }
 
 	/* Compiles and links multiple fragment shaders with a single vertex shader */
 	var createPrograms = function (vertexshader, frags) {
@@ -41,11 +55,8 @@ var Demo = (function($, assets, glul) {
 
 		// Apply custom texture parameters.
 		for (var name in params) {
-			/*
-			if (!params.hasownproperty(name)) {
+			if (!params.hasOwnProperty(name))
 				continue;
-			}
-			*/
 
 			gl.texParameteri(gl.TEXTURE_2D, name, params[name]);
 		}
@@ -97,14 +108,17 @@ var Demo = (function($, assets, glul) {
 		quadVerts = quad[0];
 		quadInds = quad[1];
 
-		// Set all vertex attributes
-		programs.map(function (prog, index) {
+        mapmap(programs, function (key, prog, list) {
+            console.log("mapmap", key, prog, list);
 			gl.useProgram(prog);	
 			set2DVertexAttribPointer(prog, quadVerts.itemSize);
-		});
+        });
 
-		effects["test"] = new Effect(programs[0], {});
-		playlist.add(new PlaylistEntry("test", 0, 10.0));
+        console.log("programs: ", programs);
+
+		effects["red"] = new Effect(programs["red.frag"], {});
+		effects["blue"] = new Effect(programs["blue.frag"], {});
+		playlist.add(new PlaylistEntry("blue", 0, 10.0));
 
 		prof.end("init");
 
@@ -133,8 +147,8 @@ var Demo = (function($, assets, glul) {
 
 		} else {
 			effects[eff.effect].render({}, function (prog) {
-				set2DVertexAttribPointer(prog);
-				gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, quadInds)
+                set2DVertexAttribPointer(prog);
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, quadInds)
 				gl.drawElements(gl.TRIANGLES, quadInds.numItems, gl.UNSIGNED_SHORT, 0);
 			});
 		}
