@@ -9,10 +9,11 @@ var Demo = (function($, assets, glul) {
 
 	var programs = {}; 
 	var effects = {};
-	var playlist = new Playlist();
+	var playlist = {};
 
 	var quadVerts;
 	var quadInds;
+    var data = {};
 
 	var getBasename = function (path) {
 		return path.split(/[\\/]/).pop();
@@ -95,11 +96,40 @@ var Demo = (function($, assets, glul) {
 		gl.vertexAttribPointer(prog.vertexPosAttrib, quadVerts.itemSize, gl.FLOAT, false, 0, 0);
 	}
 
-	demo.init = function(viewportElement) {
-		console.log("Initializing");
-		prof.begin("init");
-		gl = glul.initGL(viewportElement);
+    /* Loads all assets and calls 'setup' which calls 'success' function. */
+    var load = function (demodata, setup, success) {
+        data = demodata;
+        console.log("Loaded demo data", demodata);
 
+        console.log("Assets: ", data.assets);
+
+        data.assets.images.map(Assets.queueImage);
+        Assets.queueVertexShader(data.assets.vertexshader);
+        data.assets.fragmentshaders.map(Assets.queueFragmentShader);
+
+        if ("text" in data.assets)
+            data.assets.text.map(Assets.queue);
+
+        Assets.loadAll(function () {
+            setup(success);
+        }, function (filename) {
+            throw "Couldn't load file " + filename;
+        });
+    }
+
+    var createEffects = function (efflist) {
+        mapmap(efflist, function (key, val, list) {
+            if (!(val.shader in programs))
+                throw "Invalid shader in datafile: '" + val.shader + "' in effect " + key;
+
+            effects[key] = new Effect(programs[val.shader], val.config);
+        });
+
+        console.log("Effects", effects);
+    }
+
+    /* Generates OpenGL objects from the loaded assets.*/
+    var setupAssets = function(callback) {
 		prof.begin("texture gen");
 		generateTextures(Assets.images);
 		prof.end("texture gen");
@@ -120,14 +150,24 @@ var Demo = (function($, assets, glul) {
 
         console.log("programs: ", programs);
 
-		effects["red"] = new Effect(programs["red.frag"], {});
-		effects["blue"] = new Effect(programs["blue.frag"], {});
-		playlist.add(new PlaylistEntry("blue", 0, 10.0));
+        createEffects(data.effects);
+
+        playlist = new Playlist(data.playlist);
 
 		prof.end("init");
 
 		console.log(prof.entries);
 		console.log(playlist);
+
+        callback();
+    }
+
+	demo.init = function(viewportElement, demodata, success) {
+		console.log("Initializing");
+		prof.begin("init");
+		gl = glul.initGL(viewportElement);
+
+        load(demodata, setupAssets, success);
 	}
 
 	demo.run = function() {

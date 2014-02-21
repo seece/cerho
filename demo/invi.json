@@ -1,0 +1,42 @@
+{
+	"info" : {
+		"title" : "the invitro"
+	},
+
+	"assets" : {
+	
+		"images" : [
+			"images/eka.png"
+		],
+		
+		"vertexshader" : "shaders/shader.vert",
+		
+		"fragmentshaders" : [
+			"shaders/red.frag",
+			"shaders/blue.frag"
+		],
+		
+		"text" : []
+	},
+	
+	"effects" : {
+		"punainen" : {
+			"shader" : "red.frag",
+			"config" : {}
+		},
+		"sininen" : {
+			"shader" : "blue.frag",
+			"config" : {}
+		}
+	},
+	
+	"playlist" : {
+		"entries" : [
+			{
+			"effect" : "punainen",
+			"begin" : 0.0,
+			"end" : 15.0
+			}
+		]
+	}
+}

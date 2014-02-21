@@ -6,7 +6,7 @@ function PlaylistEntry(effect, begin, end, title) {
     this.title = title || "untitled";
 }
 
-function Playlist () {
+function Playlist (data) {
    /* Each timeline entry an object of the form
     *
     * { 
@@ -19,7 +19,16 @@ function Playlist () {
     */
 
     this.entries = [];
-    // this.endtime;
+    var self = this;
+    
+    if (data === undefined) {
+        return;
+    }
+
+    data.entries.map(function (entry) {
+        var e = $.extend({title : "untitled"}, entry);
+        self.entries.push(new PlaylistEntry(e.effect, e.begin, e.end, e.title));
+    });
 }
 
 Playlist.prototype.add = function (entry) {

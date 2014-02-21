@@ -1,7 +1,7 @@
 
 function Effect(program, config) {
     this.program = program;      // linked shader program object
-    this.config = config;        // configuration object
+    this.config = config;  // configuration object
 
     console.log("New effect: ", this);
 }

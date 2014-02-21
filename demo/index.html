@@ -30,10 +30,11 @@ var queueAssets = function () {
 	Assets.queueImage("images/eka.png");
 }
 
-var initialize = function () {
+var initialize = function (demodata) {
 	var demo = Demo;
+    //demo.load(demodata);
 
-	queueAssets();
+	//queueAssets();
 
 	var width = $(window).get(0).clientWidth - 0;
 	var height = width * (9.0/16.0);
@@ -41,6 +42,14 @@ var initialize = function () {
 	$('#viewport').attr("width", width);
 	$('#viewport').attr("height", height);
 
+    demo.init(
+            $('#viewport').get(0), 
+            demodata,
+            function () {
+                demo.run(); 
+            });
+
+    /*
 	Assets.loadAll(function () {
 				console.log("Demo assets: ", Assets.store, Assets.images, 
 					Assets.vertexshaders, Assets.fragmentshaders)
@@ -50,10 +59,13 @@ var initialize = function () {
 			function (filename) {
 				console.log("couldn't load asset", filename);	
 			});
+    */
 
 }
 
-initialize();
+$.getJSON("invi.json", null, function(data, status, jqXHR) {
+        initialize(data);
+        });
 
 </script>
 </body>
