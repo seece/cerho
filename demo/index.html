@@ -6,6 +6,7 @@
 <script src="jquery203.min.js"></script>
 <script src="webgl-utils.js"></script>
 <script src="profiler.js"></script>
+<script src="utils.js"></script>
 <script src="assets.js"></script>
 <script src="effect.js"></script>
 <script src="playlist.js"></script>
@@ -23,18 +24,9 @@
 <span id="error"></span>
 
 <script>
-var queueAssets = function () {
-	Assets.queueVertexShader("shaders/shader.vert");
-	Assets.queueFragmentShader("shaders/red.frag");
-	Assets.queueFragmentShader("shaders/blue.frag");
-	Assets.queueImage("images/eka.png");
-}
 
 var initialize = function (demodata) {
 	var demo = Demo;
-    //demo.load(demodata);
-
-	//queueAssets();
 
 	var width = $(window).get(0).clientWidth - 0;
 	var height = width * (9.0/16.0);
@@ -48,18 +40,6 @@ var initialize = function (demodata) {
             function () {
                 demo.run(); 
             });
-
-    /*
-	Assets.loadAll(function () {
-				console.log("Demo assets: ", Assets.store, Assets.images, 
-					Assets.vertexshaders, Assets.fragmentshaders)
-				demo.init($('#viewport').get(0));
-				demo.run();	
-			}, 
-			function (filename) {
-				console.log("couldn't load asset", filename);	
-			});
-    */
 
 }
 

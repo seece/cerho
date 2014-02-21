@@ -22,11 +22,11 @@
 	"effects" : {
 		"punainen" : {
 			"shader" : "red.frag",
-			"config" : {}
+			"params" : {}
 		},
 		"sininen" : {
 			"shader" : "blue.frag",
-			"config" : {}
+			"params" : {}
 		}
 	},
 	
@@ -35,7 +35,10 @@
 			{
 			"effect" : "punainen",
 			"begin" : 0.0,
-			"end" : 15.0
+			"end" : 15.0,
+			"params" : {
+				"flash" : 0.5
+			}
 			}
 		]
 	}

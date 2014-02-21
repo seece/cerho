@@ -1,8 +1,9 @@
 
-function PlaylistEntry(effect, begin, end, title) {
+function PlaylistEntry(effect, begin, end, params, title) {
     this.effect = effect ;
     this.begin = begin;
     this.end = end;
+    this.params = params || {};
     this.title = title || "untitled";
 }
 
@@ -27,7 +28,7 @@ function Playlist (data) {
 
     data.entries.map(function (entry) {
         var e = $.extend({title : "untitled"}, entry);
-        self.entries.push(new PlaylistEntry(e.effect, e.begin, e.end, e.title));
+        self.entries.push(new PlaylistEntry(e.effect, e.begin, e.end, e.params, e.title));
     });
 }
 
@@ -44,7 +45,7 @@ Playlist.prototype.add = function (entry) {
 }
 
 /* 
- * Returns the effect in the current position on the timeline
+ * Returns the playlist entry in the current position on the timeline
  * time:    The time in seconds.
  */
 Playlist.prototype.getCurrent = function (time) {

@@ -1,4 +1,4 @@
-var Demo = (function($, assets, glul) {
+var Demo = (function($, assets, glul, utils) {
 
 	var demo = {};
 	var prof = new Profiler();
@@ -19,22 +19,6 @@ var Demo = (function($, assets, glul) {
 		return path.split(/[\\/]/).pop();
 	}
 
-    /* 
-     * func(key, val, list)
-     * */
-    var mapmap = function (list, func) {
-        var obj = {};
-
-		for (var key in list) {
-			if (!list.hasOwnProperty(key)) 
-				continue;
-
-            obj[key] = func(key, list[key], list);
-		}
-
-        return obj;
-    }
-
 	/* Compiles and links multiple fragment shaders with a single vertex shader. 
      *
      * Each program will be given the basename of the corresponding fragment shader.
@@ -46,7 +30,6 @@ var Demo = (function($, assets, glul) {
 			var fstr = Assets.fragmentshaders[frag];
 			console.log("Compiling shader", frag);
 			var program = glul.createProgram(vertexshader, fstr);
-			//programs.push(program);
             var name = getBasename(frag);
 			programs[name] = program;
 		}
@@ -118,11 +101,11 @@ var Demo = (function($, assets, glul) {
     }
 
     var createEffects = function (efflist) {
-        mapmap(efflist, function (key, val, list) {
+        utils.mapmap(efflist, function (key, val, list) {
             if (!(val.shader in programs))
                 throw "Invalid shader in datafile: '" + val.shader + "' in effect " + key;
 
-            effects[key] = new Effect(programs[val.shader], val.config);
+            effects[key] = new Effect(programs[val.shader], val.params);
         });
 
         console.log("Effects", effects);
@@ -142,8 +125,8 @@ var Demo = (function($, assets, glul) {
 		quadVerts = quad[0];
 		quadInds = quad[1];
 
-        mapmap(programs, function (key, prog, list) {
-            console.log("mapmap", key, prog, list);
+        utils.mapmap(programs, function (key, prog, list) {
+            console.log("utils.mapmap", key, prog, list);
 			gl.useProgram(prog);	
 			set2DVertexAttribPointer(prog, quadVerts.itemSize);
         });
@@ -184,13 +167,13 @@ var Demo = (function($, assets, glul) {
 		gl.clearColor(0.2, 0.2, 0.2, 1.0);
 		gl.clear(gl.COLOR_BUFFER_BIT);
 
-		var eff = playlist.getCurrent(5.0);
+		var entry = playlist.getCurrent(5.0);
 
-		if (!(eff.effect in effects)) {
-			console.log("Invalid effect name in playlist: ", eff);
+		if (!(entry.effect in effects)) {
+			console.log("Invalid effect name in playlist: ", entry);
 
 		} else {
-			effects[eff.effect].render({}, function (prog) {
+			effects[entry.effect].render(entry.params, function (prog) {
                 set2DVertexAttribPointer(prog);
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, quadInds)
 				gl.drawElements(gl.TRIANGLES, quadInds.numItems, gl.UNSIGNED_SHORT, 0);
@@ -200,4 +183,4 @@ var Demo = (function($, assets, glul) {
 	}
 
 	return demo;
-})($, Assets, glul);
+})($, Assets, glul, Utils);
