@@ -10,30 +10,8 @@
  *
  */
 
-var Profiler = (function () {
+var Profiler = (function (utils) {
 	// http://dvolvr.davidwaterston.com/2012/06/24/javascript-accurate-timing-is-almost-here/
-	var getNow = (function() {
-
-		// Returns the number of milliseconds elapsed since either the browser navigationStart event or
-		// the UNIX epoch, depending on availability.
-		// Where the browser supports 'performance' we use that as it is more accurate (microsoeconds
-		// will be returned in the fractional part) and more reliable as it does not rely on the system time.
-		// Where 'performance' is not available, we will fall back to Date().getTime().
-
-		var performance = window.performance || {};
-
-		performance.now = (function() {
-			return performance.now    ||
-			performance.webkitNow     ||
-			performance.msNow         ||
-			performance.oNow          ||
-			performance.mozNow        ||
-			function() { return new Date().getTime(); };
-		})();
-
-		return performance.now();
-
-	});  
 
 
 	function Profiler() {
@@ -48,7 +26,7 @@ var Profiler = (function () {
 	}
 
 	Profiler.prototype.end = function (eventName) {
-		this.entries[eventName].end = getNow();
+		this.entries[eventName].end = utils.getNow();
 		this.entries[eventName].diff = this.entries[eventName].end - this.entries[eventName].begin;
 	}
 
@@ -66,4 +44,4 @@ var Profiler = (function () {
 	}
 
 	return Profiler;
-})();
+})(Utils);
