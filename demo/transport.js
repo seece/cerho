@@ -21,6 +21,11 @@ function Transport(song, bpm) {
         return 0.0;
     }
 
+    this.getBeat = function () {
+        // seconds / beats_per_second
+        return this.getPos() / (this.bpm/60.0);
+    }
+
     this.play = function() {
         this.playing = true; 
         this.playstart = now() + this.pos;

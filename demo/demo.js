@@ -178,8 +178,8 @@ var Demo = (function($, assets, glul, utils) {
 
     /* TODO add ShaderToy compatible uniforms here */
     var setCommonUniforms = function (entry, prog) {
-        var time = transport.getPos();
-        setFloatUniform(prog, "time", time);
+        setFloatUniform(prog, "time", transport.getPos());
+        setFloatUniform(prog, "beat", transport.getBeat());
     }
 
 	demo.draw = function() {
