@@ -16,6 +16,9 @@ var Demo = (function($, assets, glul, utils) {
 	var quadInds;
     var data = {};
 
+    var preludePath = "include/prelude.glsl";
+    var vertexShaderPath = "shaders/shader.vert";
+
 	var getBasename = function (path) {
 		return path.split(/[\\/]/).pop();
 	}
@@ -25,7 +28,7 @@ var Demo = (function($, assets, glul, utils) {
      * Each program will be given the basename of the corresponding fragment shader.
      */
 	var createPrograms = function (vertexshader, frags) {
-        var prelude = Assets.store["include/prelude.glsl"];
+        var prelude = Assets.store[preludePath];
 		vshader = glul.createShader(prelude + vertexshader, gl.VERTEX_SHADER);
 
 		for (var frag in frags) {
@@ -91,7 +94,7 @@ var Demo = (function($, assets, glul, utils) {
         data.assets.images.map(Assets.queueImage);
         Assets.queueVertexShader(data.assets.vertexshader);
         data.assets.fragmentshaders.map(Assets.queueFragmentShader);
-        Assets.queue("include/prelude.glsl");
+        Assets.queue(preludePath);
 
         if ("text" in data.assets)
             data.assets.text.map(Assets.queue);
@@ -121,7 +124,7 @@ var Demo = (function($, assets, glul, utils) {
 		prof.end("texture gen");
 
 		prof.begin("shaders");
-		createPrograms(Assets.vertexshaders["shaders/shader.vert"], Assets.fragmentshaders);
+		createPrograms(Assets.vertexshaders[vertexShaderPath], Assets.fragmentshaders);
 		prof.end("shaders");
 
 		var quad = glul.screenQuad();
@@ -182,6 +185,8 @@ var Demo = (function($, assets, glul, utils) {
     var setCommonUniforms = function (entry, prog) {
         setFloatUniform(prog, "iGlobalTime", transport.getPos());
         setFloatUniform(prog, "beat", transport.getBeat());
+        
+        var resolutionLoc = gl.getUniformLocation(prog, "iResolution");
     }
 
 	demo.draw = function() {
