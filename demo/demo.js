@@ -153,10 +153,17 @@ var Demo = (function($, assets, glul, utils) {
         callback();
     }
 
+    var mousehandler = function (e) {
+        console.log(e);
+
+    }
+
 	demo.init = function(viewportElement, demodata, success) {
 		console.log("Initializing");
 		prof.begin("init");
 		gl = glul.initGL(viewportElement);
+
+        $(viewportElement).on("mousemove", mousehandler);
 
         load(demodata, setupAssets, success);
 	}
