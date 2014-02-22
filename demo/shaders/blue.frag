@@ -1,6 +1,4 @@
-precision mediump float;
 
-uniform float time;
 uniform float beat;
 
 //varying highp vec2 vTextureCoord;

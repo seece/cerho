@@ -25,10 +25,11 @@ var Demo = (function($, assets, glul, utils) {
      * Each program will be given the basename of the corresponding fragment shader.
      */
 	var createPrograms = function (vertexshader, frags) {
-		vshader = glul.createShader(vertexshader, gl.VERTEX_SHADER);
+        var prelude = Assets.store["include/prelude.glsl"];
+		vshader = glul.createShader(prelude + vertexshader, gl.VERTEX_SHADER);
 
 		for (var frag in frags) {
-			var fstr = Assets.fragmentshaders[frag];
+			var fstr = prelude + Assets.fragmentshaders[frag];
 			console.log("Compiling shader", frag);
 			var program = glul.createProgram(vertexshader, fstr);
             var name = getBasename(frag);
@@ -90,6 +91,7 @@ var Demo = (function($, assets, glul, utils) {
         data.assets.images.map(Assets.queueImage);
         Assets.queueVertexShader(data.assets.vertexshader);
         data.assets.fragmentshaders.map(Assets.queueFragmentShader);
+        Assets.queue("include/prelude.glsl");
 
         if ("text" in data.assets)
             data.assets.text.map(Assets.queue);
@@ -178,7 +180,7 @@ var Demo = (function($, assets, glul, utils) {
 
     /* TODO add ShaderToy compatible uniforms here */
     var setCommonUniforms = function (entry, prog) {
-        setFloatUniform(prog, "time", transport.getPos());
+        setFloatUniform(prog, "iGlobalTime", transport.getPos());
         setFloatUniform(prog, "beat", transport.getBeat());
     }
 
