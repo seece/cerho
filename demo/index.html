@@ -25,15 +25,23 @@
 <span id="error"></span>
 
 <script>
+function viewwidth(){
+   return window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth||0;
+}
+function viewheight(){
+   return window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight||0;
+}
 
 var initialize = function (demodata) {
 	var demo = Demo;
 
-	var width = $(window).get(0).clientWidth - 0;
+	var width = viewwidth();
 	var height = width * (9.0/16.0);
 
 	$('#viewport').attr("width", width);
 	$('#viewport').attr("height", height);
+
+    console.log(width, height);
 
     demo.init(
             $('#viewport').get(0), 

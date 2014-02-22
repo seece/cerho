@@ -186,7 +186,9 @@ var Demo = (function($, assets, glul, utils) {
         setFloatUniform(prog, "iGlobalTime", transport.getPos());
         setFloatUniform(prog, "beat", transport.getBeat());
         
-        var resolutionLoc = gl.getUniformLocation(prog, "iResolution");
+        var resLoc = gl.getUniformLocation(prog, "iResolution");
+        // TODO what's the third coordinate supposed to be?
+        gl.uniform3f(resLoc, gl.viewportWidth, gl.viewportHeight, 1.0);
     }
 
 	demo.draw = function() {
