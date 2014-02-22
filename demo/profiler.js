@@ -20,7 +20,7 @@ var Profiler = (function (utils) {
 
 	Profiler.prototype.begin = function (eventName) {
 		this.entries[eventName] = {
-			begin: getNow(),
+			begin: utils.getNow(),
 			end: -1
 		};
 	}

@@ -1,8 +1,9 @@
-function Transport(song) {
+function Transport(song, bpm) {
     this.song = song;
     this.playstart = Utils.getNow() / 1000.0;
     this.playing = false;
     this.pos = 0.0;
+    this.bpm = bpm || 120;
 
     var now = function () {
         return Utils.getNow() / 1000.0;
@@ -10,11 +11,11 @@ function Transport(song) {
 
     this.getPos = function () {
         if (!this.playing) {
-            return pos;
+            return this.pos;
         }
 
         if (this.song === undefined) {
-            return now() / 1000.0 - this.playstart;
+            return now() - this.playstart;
         }
 
         return 0.0;

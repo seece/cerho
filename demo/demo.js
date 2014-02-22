@@ -7,6 +7,7 @@ var Demo = (function($, assets, glul, utils) {
 	var vshader;
 	var shaders = {};
 
+    var transport;
 	var programs = {}; 
 	var effects = {};
 	var playlist = {};
@@ -142,6 +143,8 @@ var Demo = (function($, assets, glul, utils) {
 		console.log(prof.entries);
 		console.log(playlist);
 
+        transport = new Transport();
+
         callback();
     }
 
@@ -155,6 +158,7 @@ var Demo = (function($, assets, glul, utils) {
 
 	demo.run = function() {
 		console.log("Running demo");
+        transport.play();
 		demo.update();
 	}
 
@@ -162,6 +166,21 @@ var Demo = (function($, assets, glul, utils) {
 		demo.draw();
 		window.requestAnimationFrame(demo.update);
 	}
+
+    var setFloatUniform = function (prog, name, value) {
+        var loc = gl.getUniformLocation(prog, name); 
+
+        if (loc === null)
+            return;
+
+        gl.uniform1f(loc, value);
+    }
+
+    /* TODO add ShaderToy compatible uniforms here */
+    var setCommonUniforms = function (entry, prog) {
+        var time = transport.getPos();
+        setFloatUniform(prog, "time", time);
+    }
 
 	demo.draw = function() {
 		gl.clearColor(0.2, 0.2, 0.2, 1.0);
@@ -171,14 +190,15 @@ var Demo = (function($, assets, glul, utils) {
 
 		if (!(entry.effect in effects)) {
 			console.log("Invalid effect name in playlist: ", entry);
+            return;
+		} 
 
-		} else {
-			effects[entry.effect].render(entry.params, function (prog) {
-                set2DVertexAttribPointer(prog);
-                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, quadInds)
-				gl.drawElements(gl.TRIANGLES, quadInds.numItems, gl.UNSIGNED_SHORT, 0);
-			});
-		}
+        effects[entry.effect].render(entry.params, function (prog) {
+            setCommonUniforms(entry, prog);
+            set2DVertexAttribPointer(prog);
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, quadInds)
+            gl.drawElements(gl.TRIANGLES, quadInds.numItems, gl.UNSIGNED_SHORT, 0);
+        });
 
 	}
 
