@@ -35,9 +35,17 @@
 			{
 			"effect" : "punainen",
 			"begin" : 0.0,
-			"end" : 15.0,
+			"end" : 5.0,
 			"params" : {
 				"flash" : 0.5
+			}
+			},
+			{
+			"effect" : "sininen",
+			"begin" : 5.0,
+			"end" : 20.0,
+			"params" : {
+				"flash" : 0.2
 			}
 			}
 		]

@@ -174,7 +174,6 @@ var Demo = (function($, assets, glul, utils) {
 		console.log("Running demo");
         transport.play();
 		demo.update();
-		demo.begintime=utils.getNow();
 	}
 
 	demo.update = function () {
@@ -205,7 +204,7 @@ var Demo = (function($, assets, glul, utils) {
 		gl.clearColor(0.2, 0.2, 0.2, 1.0);
 		gl.clear(gl.COLOR_BUFFER_BIT);
 
-		var entry = playlist.getCurrent((utils.getNow()-demo.begintime)/1000.0);
+		var entry = playlist.getCurrent(transport.getPos());
 
 		
 		if (!(entry.effect in effects)) {
