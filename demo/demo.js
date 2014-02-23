@@ -166,12 +166,15 @@ var Demo = (function($, assets, glul, utils) {
         $(viewportElement).on("mousemove", mousehandler);
 
         load(demodata, setupAssets, success);
+		
+
 	}
 
 	demo.run = function() {
 		console.log("Running demo");
         transport.play();
 		demo.update();
+		demo.begintime=utils.getNow();
 	}
 
 	demo.update = function () {
@@ -202,8 +205,9 @@ var Demo = (function($, assets, glul, utils) {
 		gl.clearColor(0.2, 0.2, 0.2, 1.0);
 		gl.clear(gl.COLOR_BUFFER_BIT);
 
-		var entry = playlist.getCurrent(5.0);
+		var entry = playlist.getCurrent((utils.getNow()-demo.begintime)/1000.0);
 
+		
 		if (!(entry.effect in effects)) {
 			console.log("Invalid effect name in playlist: ", entry);
             return;
