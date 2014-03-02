@@ -13,6 +13,7 @@
 		
 		"fragmentshaders" : [
 			"shaders/red.frag",
+			"shaders/march1.frag",
 			"shaders/blue.frag"
 		],
 		
@@ -24,6 +25,10 @@
 			"shader" : "red.frag",
 			"params" : {}
 		},
+		"march1" : {
+			"shader" : "march1.frag",
+			"params" : {}
+		},
 		"sininen" : {
 			"shader" : "blue.frag",
 			"params" : {}
@@ -33,11 +38,10 @@
 	"playlist" : {
 		"entries" : [
 			{
-			"effect" : "punainen",
+			"effect" : "march1",
 			"begin" : 0.0,
 			"end" : 5.0,
-			"params" : {
-				"flash" : 0.5
+			"params" : { 
 			}
 			},
 			{
