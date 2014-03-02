@@ -15,7 +15,9 @@
 			"shaders/red.frag",
 			"shaders/march1.frag",
 			"shaders/blue.frag",
-			"shaders/glowingmetaballs.frag"
+			"shaders/glowingmetaballs.frag",
+			"shaders/black_metaballs.frag",
+			"shaders/colorful_metaballs.frag"
 		],
 		
 		"text" : []
@@ -36,6 +38,14 @@
 		},
 		"glowingmetaballs" : {
 			"shader" : "glowingmetaballs.frag",
+			"params" : {}
+		},
+		"black_metaballs" : {
+			"shader" : "black_metaballs.frag",
+			"params" : {}
+		},
+		"colorful_metaballs" : {
+			"shader" : "colorful_metaballs.frag",
 			"params" : {}
 		}
 	},
@@ -58,9 +68,23 @@
 			}
 			},
 			{
-			"effect" : "sininen",
+			"effect" : "black_metaballs",
 			"begin" : 15.0,
-			"end" : 20.0,
+			"end" : 25.0,
+			"params" : { 
+			}
+			},
+			{
+			"effect" : "colorful_metaballs",
+			"begin" : 25.0,
+			"end" : 35.0,
+			"params" : { 
+			}
+			},
+			{
+			"effect" : "sininen",
+			"begin" : 35.0,
+			"end" : 40.0,
 			"params" : {
 				"flash" : 0.2
 			}
