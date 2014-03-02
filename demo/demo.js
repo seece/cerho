@@ -6,6 +6,11 @@ var Demo = (function($, assets, glul, utils) {
 	var textures = {};
 	var vshader;
 	var shaders = {};
+	
+	var mouse = {
+		pos : {x : 0, y : 0},
+		buttons : {1 : 0.0, 2: 0.0, 3: 0.0}
+	};
 
     var transport;
 	var programs = {}; 
@@ -15,7 +20,7 @@ var Demo = (function($, assets, glul, utils) {
 	var quadVerts;
 	var quadInds;
     var data = {};
-
+	
     var preludePath = "include/prelude.glsl";
     var vertexShaderPath = "shaders/shader.vert";
 
@@ -153,21 +158,24 @@ var Demo = (function($, assets, glul, utils) {
         callback();
     }
 
-    var mousehandler = function (e) {
-        console.log(e);
-
-    }
-
 	demo.init = function(viewportElement, demodata, success) {
 		console.log("Initializing");
 		prof.begin("init");
 		gl = glul.initGL(viewportElement);
 
-        $(viewportElement).on("mousemove", mousehandler);
+        $(viewportElement).on("mousemove", function (e) {
+			mouse.pos = {x: e.originalEvent.layerX, y: e.originalEvent.layerY};
+		});
+		
+		$(viewportElement).on("mousedown", function (e) {
+			mouse.buttons[e.which] = 1.0;
+		});
+		
+		$(viewportElement).on("mouseup", function (e) {
+			mouse.buttons[e.which] = 0.0;
+		});
 
         load(demodata, setupAssets, success);
-		
-
 	}
 
 	demo.run = function() {
@@ -196,8 +204,12 @@ var Demo = (function($, assets, glul, utils) {
         setFloatUniform(prog, "beat", transport.getBeat());
         
         var resLoc = gl.getUniformLocation(prog, "iResolution");
+		var mouseLoc = gl.getUniformLocation(prog, "iMouse");
+		var localMouseLoc = gl.getUniformLocation(prog, "iLocalMouse");
         // TODO what's the third coordinate supposed to be?
         gl.uniform3f(resLoc, gl.viewportWidth, gl.viewportHeight, 1.0);
+		gl.uniform4f(mouseLoc, mouse.pos.x, mouse.pos.y, mouse.buttons[1], mouse.buttons[1]);
+        gl.uniform4f(localMouseLoc, mouse.pos.x / gl.viewportWidth, 1.0 - mouse.pos.y / gl.viewportHeight, mouse.buttons[1], mouse.buttons[3]);
     }
 
 	demo.draw = function() {
