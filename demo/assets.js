@@ -52,6 +52,7 @@ var Assets = (function ($){
 			};
 
 			img.onerror = function() {
+                console.log("Couldn't load image ", url);
 				deferred.reject(url);
 			};
 
@@ -61,6 +62,7 @@ var Assets = (function ($){
 		})(path, def);
 
 		promises.push(def);
+        console.log("Queued image ", path);
 	}
 
 	var queueAsset = function(path, map) {

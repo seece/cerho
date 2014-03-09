@@ -105,6 +105,7 @@ var Demo = (function($, assets, glul, utils) {
             data.assets.text.map(Assets.queue);
 
         Assets.loadAll(function () {
+            console.log("Loaded all assets.");
             setup(success);
         }, function (filename) {
             throw "Couldn't load file " + filename;
