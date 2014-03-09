@@ -66,7 +66,7 @@ var Assets = (function ($){
 	var queueAsset = function(path, map) {
 		var promise = $.get(path, null, function(data, status, jqXHR) {
 			map[path] = data;
-			console.log("Loaded asset " + data);
+			console.log("Loaded asset ", path);
 		}); 
 
 		promises.push(promise);
