@@ -23,6 +23,7 @@ var Demo = (function($, assets, glul, utils) {
 	
     var preludePath = "include/prelude.glsl";
     var vertexShaderPath = "shaders/shader.vert";
+    var debugModeEnabled = true;
 
 	var getBasename = function (path) {
 		return path.split(/[\\/]/).pop();
@@ -100,6 +101,7 @@ var Demo = (function($, assets, glul, utils) {
         Assets.queueVertexShader(data.assets.vertexshader);
         data.assets.fragmentshaders.map(Assets.queueFragmentShader);
         Assets.queue(preludePath);
+        Assets.queueAudio(data.assets.song);
 
         if ("text" in data.assets)
             data.assets.text.map(Assets.queue);
@@ -217,8 +219,14 @@ var Demo = (function($, assets, glul, utils) {
 		gl.clearColor(0.2, 0.2, 0.2, 1.0);
 		gl.clear(gl.COLOR_BUFFER_BIT);
 
-		var entry = playlist.getCurrent(transport.getPos());
+        var time = transport.getPos();
+		var entry = playlist.getCurrent(time);
 
+        if (!entry) {
+            if (debugModeEnabled) 
+                console.log("No entry found for current time", time);
+            return;
+        }
 		
 		if (!(entry.effect in effects)) {
 			console.log("Invalid effect name in playlist: ", entry);

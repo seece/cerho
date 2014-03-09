@@ -74,6 +74,32 @@ var Assets = (function ($){
 		promises.push(promise);
 	}
 
+    obj.queueAudio = function(path) {
+        var track = new Audio(path);
+        console.log("TRACK: ", track);
+
+        track.onload = function() {
+            console.log("Loaded track");
+        };
+
+        track.onerror = function() {
+            console.log("Couldn't load track");
+        };
+
+        track._statusUpdater = function() {
+            // Check buffering only when we have a proper TimeRanges object
+            if (track.buffered.length >= 0) {
+                var rangeId = track.buffered.length - 1;
+                console.log(rangeId);
+                //console.log(track.buffered.end(rangeId));
+            }
+
+            setInterval(track._statusUpdater, 1000);
+        };
+
+        track._statusUpdater(track);
+    }
+
 	obj.queue = function(path) {
 		queueAsset(path, obj.store);
 	}

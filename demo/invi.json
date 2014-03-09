@@ -10,6 +10,7 @@
 		],
 		
 		"vertexshader" : "shaders/shader.vert",
+        "song" : "audio/hc.mp3",
 		
 		"fragmentshaders" : [
 			"shaders/red.frag",
