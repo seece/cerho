@@ -18,7 +18,7 @@ function Transport(song, bpm) {
             return now() - this.playstart;
         }
 
-        return 0.0;
+        return song.currentTime;
     }
 
     this.getBeat = function () {
@@ -30,9 +30,20 @@ function Transport(song, bpm) {
         this.playing = true; 
         this.playstart = now() + this.pos;
 
+        console.log("playin songg: ", this.song);
+
         // If there's no song set, just pretend we are playing.
         if (this.song === undefined) 
             return;
+
+        song.play();
+    }
+
+    this.pause = function() {
+        if (this.song === undefined)
+            return;
+
+        song.pause();
     }
 
     this.playstart = this.getPos();

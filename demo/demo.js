@@ -101,7 +101,9 @@ var Demo = (function($, assets, glul, utils) {
         Assets.queueVertexShader(data.assets.vertexshader);
         data.assets.fragmentshaders.map(Assets.queueFragmentShader);
         Assets.queue(preludePath);
-        Assets.queueAudio(data.assets.song);
+        Assets.queueAudio(data.assets.song, function (pos, length) {
+            console.log("Buffering audio: " + ((pos/length) * 100.0) + "%");
+        });
 
         if ("text" in data.assets)
             data.assets.text.map(Assets.queue);
@@ -156,7 +158,7 @@ var Demo = (function($, assets, glul, utils) {
 		console.log(prof.entries);
 		console.log(playlist);
 
-        transport = new Transport();
+        transport = new Transport(assets.audio[data.assets.song]);
 
         callback();
     }

@@ -20,6 +20,7 @@ var Assets = (function ($){
 	var obj = {};
 	var promises = [];
 
+    obj.audio = {};
 	obj.store = {};
 	obj.images = {};
 	obj.fragmentshaders = {};
@@ -85,7 +86,6 @@ var Assets = (function ($){
              * download has finished. */
             track.onload = function() {
                 console.log("Loaded audio");
-                console.log("Buffered!");
                 deferred.resolve();
             };
 
@@ -99,9 +99,6 @@ var Assets = (function ($){
                 if (track.buffered.length > 0) {
                     var rangeId = track.buffered.length - 1;
                     var bufferedLength = track.buffered.end(rangeId);
-                    //console.log(rangeId);
-                    console.log(rangeId, track.duration);
-                    console.log(bufferedLength, track);
 
                     if (statusCallback && typeof(statusCallback) == typeof(Function)) {
                         statusCallback(bufferedLength, track.duration);
@@ -113,6 +110,7 @@ var Assets = (function ($){
                     }
                 }
 
+                obj.audio[url] = track;
                 setTimeout(track._statusUpdater, 500);
             };
 
