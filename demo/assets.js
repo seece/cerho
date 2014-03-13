@@ -88,13 +88,20 @@ var Assets = (function ($){
 
         track._statusUpdater = function() {
             // Check buffering only when we have a proper TimeRanges object
-            if (track.buffered.length >= 0) {
+            if (track.buffered.length > 0) {
                 var rangeId = track.buffered.length - 1;
-                console.log(rangeId);
-                //console.log(track.buffered.end(rangeId));
+                var bufferedLength = track.buffered.end(rangeId);
+                //console.log(rangeId);
+                console.log(rangeId, track.duration);
+                console.log(bufferedLength, track);
+
+                if (track.duration - bufferedLength - 0.01 <= 0.0) {
+                    console.log("Buffered!");
+                    return;
+                }
             }
 
-            setInterval(track._statusUpdater, 1000);
+            setTimeout(track._statusUpdater, 500);
         };
 
         track._statusUpdater(track);
