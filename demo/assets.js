@@ -74,37 +74,52 @@ var Assets = (function ($){
 		promises.push(promise);
 	}
 
-    obj.queueAudio = function(path) {
-        var track = new Audio(path);
-        console.log("TRACK: ", track);
+    obj.queueAudio = function(path, statusCallback) {
+        var def = $.Deferred();
 
-        track.onload = function() {
-            console.log("Loaded track");
-        };
+        (function (url, deferred) {
+            var track = new Audio(path);
+            console.log("Queued audio: ", path, track);
 
-        track.onerror = function() {
-            console.log("Couldn't load track");
-        };
+            /* Called manually from _statusUpdater() when the
+             * download has finished. */
+            track.onload = function() {
+                console.log("Loaded audio");
+                console.log("Buffered!");
+                deferred.resolve();
+            };
 
-        track._statusUpdater = function() {
-            // Check buffering only when we have a proper TimeRanges object
-            if (track.buffered.length > 0) {
-                var rangeId = track.buffered.length - 1;
-                var bufferedLength = track.buffered.end(rangeId);
-                //console.log(rangeId);
-                console.log(rangeId, track.duration);
-                console.log(bufferedLength, track);
+            track.onerror = function() {
+                console.log("Couldn't load audio");
+                deferred.reject(url);
+            };
 
-                if (track.duration - bufferedLength - 0.01 <= 0.0) {
-                    console.log("Buffered!");
-                    return;
+            track._statusUpdater = function() {
+                // Check buffering only when we have a proper TimeRanges object
+                if (track.buffered.length > 0) {
+                    var rangeId = track.buffered.length - 1;
+                    var bufferedLength = track.buffered.end(rangeId);
+                    //console.log(rangeId);
+                    console.log(rangeId, track.duration);
+                    console.log(bufferedLength, track);
+
+                    if (statusCallback && typeof(statusCallback) == typeof(Function)) {
+                        statusCallback(bufferedLength, track.duration);
+                    }
+
+                    if (track.duration - bufferedLength - 0.01 <= 0.0) {
+                        track.onload();
+                        return;
+                    }
                 }
-            }
 
-            setTimeout(track._statusUpdater, 500);
-        };
+                setTimeout(track._statusUpdater, 500);
+            };
 
-        track._statusUpdater(track);
+            track._statusUpdater(track);
+        })(path, def);
+
+        promises.push(def);
     }
 
 	obj.queue = function(path) {
