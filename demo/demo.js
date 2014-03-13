@@ -24,6 +24,7 @@ var Demo = (function($, assets, glul, utils) {
     var preludePath = "include/prelude.glsl";
     var vertexShaderPath = "shaders/shader.vert";
     var debugModeEnabled = true;
+    var keyListener; // uses the keypress.js library to handle keypresses
 
 	var getBasename = function (path) {
 		return path.split(/[\\/]/).pop();
@@ -163,6 +164,18 @@ var Demo = (function($, assets, glul, utils) {
         callback();
     }
 
+    var setupHotkeys = function(listener) {
+        var keyfuncs = {
+            "space" : function () {transport.togglePlaying();},
+            "backspace" : function () {console.log("scrub to beginning"); transport.seekTo(0)},
+            "r" : function () {console.log("reload")}
+        };
+
+        utils.mapmap(keyfuncs, function (combo, func, list) {
+            listener.simple_combo(combo, func);
+        });
+    }
+
 	demo.init = function(viewportElement, demodata, success) {
 		console.log("Initializing");
 		prof.begin("init");
@@ -179,6 +192,11 @@ var Demo = (function($, assets, glul, utils) {
 		$(viewportElement).on("mouseup", function (e) {
 			mouse.buttons[e.which] = 0.0;
 		});
+
+        if (debugModeEnabled) {
+            keyListener = new window.keypress.Listener();
+            setupHotkeys(keyListener);
+        }
 
         load(demodata, setupAssets, success);
 	}

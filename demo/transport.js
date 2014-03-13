@@ -10,11 +10,11 @@ function Transport(song, bpm) {
     }
 
     this.getPos = function () {
-        if (!this.playing) {
-            return this.pos;
-        }
-
         if (this.song === undefined) {
+            if (!this.playing) {
+                return this.pos;
+            }
+
             return now() - this.playstart;
         }
 
@@ -30,7 +30,7 @@ function Transport(song, bpm) {
         this.playing = true; 
         this.playstart = now() + this.pos;
 
-        console.log("playin songg: ", this.song);
+        console.log("Playing song from ", this.getPos());
 
         // If there's no song set, just pretend we are playing.
         if (this.song === undefined) 
@@ -40,10 +40,25 @@ function Transport(song, bpm) {
     }
 
     this.pause = function() {
+        this.playing = false;
+
         if (this.song === undefined)
             return;
 
         song.pause();
+    }
+
+    this.togglePlaying = function() {
+
+        if (this.playing) {
+            this.pause();
+        } else {
+            this.play();
+        }
+    }
+
+    this.seekTo = function(secs) {
+        song.currentTime = secs;
     }
 
     this.playstart = this.getPos();
