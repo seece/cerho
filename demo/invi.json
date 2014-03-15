@@ -62,6 +62,7 @@
 			"begin" : 0.0,
 			"end" : 5.0,
 			"params" : { 
+				"testparam" : 1.0
 			}
 			},
 			{

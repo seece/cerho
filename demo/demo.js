@@ -24,6 +24,7 @@ var Demo = (function($, assets, glul, utils) {
     var preludePath = "include/prelude.glsl";
     var vertexShaderPath = "shaders/shader.vert";
     var debugModeEnabled = false;
+	var debugState = {currentEntry : {}, currentEffect : {}};
     var keyListener; // uses the keypress.js library to handle keypresses
 
 	var getBasename = function (path) {
@@ -191,11 +192,19 @@ var Demo = (function($, assets, glul, utils) {
 		var frametime = prof.entries["render"].diff;
 		
 		var beat = transport.getBeat();
+		var entry_params = "";
+		
+		if (debugState.currentEntry)
+			utils.mapmap(debugState.currentEntry.params, function (key, value, list) {
+				entry_params += key + " : " + value + ", ";
+			});
 		
 		$("#frametime").html((Math.round(frametime * 100) / 100)  + " ms");
+		$("#current_effect").html("FX: " + debugState.currentEffect);
+		$("#current_entry").html(entry_params );
 		$("#volume").html(transport.getSong().volume*100.0 + "%");
 		$("#playstate").html(transport.isPlaying() ? "> PLAYING" : "|| PAUSED");
-		$("#time").html((Math.round(transport.getPos() * 100) / 100) + " s");
+		$("#time").html((Math.round(transport.getPos() * 100) / 100) + " / " + (Math.round(transport.getSong().duration * 100) / 100) + " s");
 		$("#beats").html((Math.round(beat * 100) / 100) + " beats");
 		
 		var c = Math.round((1.0-(beat - Math.floor(beat)))*255);
@@ -278,6 +287,10 @@ var Demo = (function($, assets, glul, utils) {
 
         var time = transport.getPos();
 		var entry = playlist.getCurrent(time);
+		debugState.currentEntry = entry;
+		
+		if (entry)
+			debugState.currentEffect = entry.effect;
 
         if (!entry) {
             if (debugModeEnabled) 
