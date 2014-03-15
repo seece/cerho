@@ -14,17 +14,30 @@
  *
  * 		Assets.store["something.shader"];
  * 		Assets.images["art.jpg"];
+ *
+ * You can set the basepath where to load all assets from with
+ * setBasepath(path) method. The appended basepath is not taken into
+ * account in asset map keys, so queue("shader/a.frag") will be saved
+ * in assets.store["shader/a.frag"] regardless of the basepath.
  */
 
 var Assets = (function ($){
 	var obj = {};
 	var promises = [];
+	var basepath = "";
 
     obj.audio = {};
 	obj.store = {};
 	obj.images = {};
 	obj.fragmentshaders = {};
 	obj.vertexshaders = {};
+	
+	var appendBasePath = function(path) {
+		if (!basepath)
+			return path;
+	
+		return basepath + "/" + path;
+	}
 
 	obj.loadAll = function(callback, onerror) {
 		$.when.apply($, promises).done(
@@ -35,7 +48,8 @@ var Assets = (function ($){
 			});
 	}
 
-	obj.queueImage = function(path) {
+	obj.queueImage = function(relative_path) {
+		path = appendBasePath(relative_path);
 		var def = $.Deferred();
 
 		(function(url, deferred) {
@@ -59,23 +73,25 @@ var Assets = (function ($){
 
 			img.src = url;
 
-			obj.images[url] = img;
+			obj.images[relative_path] = img;
 		})(path, def);
 
 		promises.push(def);
         console.log("Queued image ", path);
 	}
 
-	var queueAsset = function(path, map) {
+	var queueAsset = function(relative_path, map) {
+		path = appendBasePath(relative_path);
 		var promise = $.get(path, null, function(data, status, jqXHR) {
-			map[path] = data;
+			map[relative_path] = data;
 			console.log("Loaded asset ", path);
 		}); 
 
 		promises.push(promise);
 	}
 
-    obj.queueAudio = function(path, statusCallback) {
+    obj.queueAudio = function(relative_path, statusCallback) {
+		path = appendBasePath(relative_path);
         var def = $.Deferred();
 
         (function (url, deferred) {
@@ -110,7 +126,7 @@ var Assets = (function ($){
                     }
                 }
 
-                obj.audio[url] = track;
+                obj.audio[relative_path] = track;
                 setTimeout(track._statusUpdater, 500);
             };
 
@@ -130,6 +146,14 @@ var Assets = (function ($){
 	
 	obj.queueVertexShader = function (path) {
 		queueAsset(path, obj.vertexshaders);
+	}
+	
+	obj.setBasepath = function (_basepath) {
+		basepath = _basepath;
+	}
+	
+	obj.getBasepath = function () {
+		return basepath;
 	}
 
 	return obj;

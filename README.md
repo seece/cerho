@@ -4,6 +4,8 @@ A WebGL demo engine wannabe.
 ## Demo data 
 A JSON file plus all required shaders. There is one vertex shader (`shader.vert`) and multiple fragment shaders (of the form `*.frag`). All required assets are listed in the `assets` portion of the demo JSON representation.
 
+The demo data is self contained in a single directory (e.g. `invi/`) and all asset paths are assumed to be relative to this directory.
+
 ### Parameters
 Each Effect (`effects` object in JSON) and PlaylistEntry (`playlist.entries`) can contain *parameters*. These objects are merged prioritizing the entry parameter definitions. The contained floating point values are passed in to the respective fragment shader as shader uniforms.
 

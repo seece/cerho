@@ -21,6 +21,7 @@ var Demo = (function($, assets, glul, utils) {
 	var quadInds;
     var data = {};
 	
+	var assetBasepath = "";
     var preludePath = "include/prelude.glsl";
     var vertexShaderPath = "shaders/shader.vert";
     var debugModeEnabled = false;
@@ -95,6 +96,7 @@ var Demo = (function($, assets, glul, utils) {
     /* Loads all assets and calls 'setup' which calls 'success' function. */
     var load = function (demodata, setup, success) {
         data = demodata;
+		Assets.setBasepath(assetBasepath);
         console.log("Loaded demo data", demodata);
 
         console.log("Assets: ", data.assets);
@@ -213,8 +215,10 @@ var Demo = (function($, assets, glul, utils) {
 		//$("#beatmeter").html(c);
 	}
 
-	demo.init = function(viewportElement, demodata, success) {
-		console.log("Initializing");
+	demo.init = function(viewportElement, basepath, demodata, success) {
+		console.log("Initializing with basepath ", basepath);
+		assetBasepath = basepath;
+		
 		prof.begin("init");
 		if (debugModeEnabled) {
 			setupDebugView("#debugview");

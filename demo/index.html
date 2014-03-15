@@ -56,13 +56,14 @@ var initialize = function (demodata) {
 
     demo.init(
             $('#viewport').get(0), 
+			"invi",
             demodata,
             function () {
                 demo.run(); 
             });
 }
 
-$.getJSON("invi.json", null, function(data, status, jqXHR) {
+$.getJSON("invi/demo.json", null, function(data, status, jqXHR) {
         initialize(data);
         });
 
