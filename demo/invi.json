@@ -10,7 +10,10 @@
 		],
 		
 		"vertexshader" : "shaders/shader.vert",
-        "song" : "audio/hc.mp3",
+        "song" : {
+			"path" : "audio/hc.mp3", 
+			"bpm" : 149
+		},
 		
 		"fragmentshaders" : [
 			"shaders/red.frag",

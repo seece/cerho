@@ -102,7 +102,7 @@ var Demo = (function($, assets, glul, utils) {
         Assets.queueVertexShader(data.assets.vertexshader);
         data.assets.fragmentshaders.map(Assets.queueFragmentShader);
         Assets.queue(preludePath);
-        Assets.queueAudio(data.assets.song, function (pos, length) {
+        Assets.queueAudio(data.assets.song.path, function (pos, length) {
             console.log("Buffering audio: " + ((pos/length) * 100.0) + "%");
         });
 
@@ -159,7 +159,7 @@ var Demo = (function($, assets, glul, utils) {
 		console.log(prof.entries);
 		console.log(playlist);
 
-        transport = new Transport(assets.audio[data.assets.song]);
+        transport = new Transport(assets.audio[data.assets.song.path], data.assets.song.bpm);
 
         callback();
     }
@@ -194,7 +194,7 @@ var Demo = (function($, assets, glul, utils) {
 		
 		$("#frametime").html((Math.round(frametime * 100) / 100)  + " ms");
 		$("#volume").html(transport.getSong().volume*100.0 + "%");
-		$("#playstate").html(transport.isPlaying() ? "PLAYING" : "PAUSED");
+		$("#playstate").html(transport.isPlaying() ? "> PLAYING" : "|| PAUSED");
 		$("#time").html((Math.round(transport.getPos() * 100) / 100) + " s");
 		$("#beats").html((Math.round(beat * 100) / 100) + " beats");
 		
@@ -202,7 +202,6 @@ var Demo = (function($, assets, glul, utils) {
 		
 		$("#beats").css("background-color", "rgb("+c+","+0+","+0+")");
 		//$("#beatmeter").html(c);
-		
 	}
 
 	demo.init = function(viewportElement, demodata, success) {
@@ -297,7 +296,6 @@ var Demo = (function($, assets, glul, utils) {
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, quadInds)
             gl.drawElements(gl.TRIANGLES, quadInds.numItems, gl.UNSIGNED_SHORT, 0);
         });
-
 	}
 	
 	demo.setDebugMode = function(state) {
