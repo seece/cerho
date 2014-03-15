@@ -30,3 +30,9 @@ body {
 	padding:5px;
 	position:relative;
 }
+
+#instructions {
+	font-family:arial;
+	font-size:11px;
+	margin:5px;
+}
