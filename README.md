@@ -39,6 +39,9 @@ void main() {
 
 ```
 
+## Debug mode
+Append `?debug` to url to enable debug mode.
+
 ## Uniforms
 [ShaderToy][shader_toy] uniforms:
 

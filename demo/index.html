@@ -34,7 +34,13 @@ function viewheight(){
 }
 
 var initialize = function (demodata) {
+	var currLocation = window.location.search;
+	var query = currLocation.split("?")[1];
+
 	var demo = Demo;
+	if (query.search("debug") != -1) {
+		demo.setDebugMode(true);
+	}
 
 	var width = viewwidth();
 	var height = width * (9.0/16.0);

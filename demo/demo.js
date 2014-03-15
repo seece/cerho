@@ -23,7 +23,7 @@ var Demo = (function($, assets, glul, utils) {
 	
     var preludePath = "include/prelude.glsl";
     var vertexShaderPath = "shaders/shader.vert";
-    var debugModeEnabled = true;
+    var debugModeEnabled = false;
     var keyListener; // uses the keypress.js library to handle keypresses
 
 	var getBasename = function (path) {
@@ -265,6 +265,10 @@ var Demo = (function($, assets, glul, utils) {
             gl.drawElements(gl.TRIANGLES, quadInds.numItems, gl.UNSIGNED_SHORT, 0);
         });
 
+	}
+	
+	demo.setDebugMode = function(state) {
+		debugModeEnabled = state;
 	}
 
 	return demo;
