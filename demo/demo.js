@@ -165,9 +165,14 @@ var Demo = (function($, assets, glul, utils) {
     }
 
     var setupHotkeys = function(listener) {
+		var seekspeed = 1.0;
         var keyfuncs = {
             "space" : function () {transport.togglePlaying();},
             "q" : function () {console.log("scrub to beginning"); transport.seek(0)},
+            "right" : function () {transport.seek(transport.getPos() + seekspeed)},
+            "left" : function () {transport.seek(transport.getPos() - seekspeed)},
+			"shift right" : function () {transport.seek(transport.getPos() + seekspeed*2.0)},
+            "shift left" : function () {transport.seek(transport.getPos() - seekspeed*2.0)},
             "r" : function () {console.log("reload")}
         };
 

@@ -57,11 +57,16 @@ Transport.prototype.pause = function() {
         if (this.song === undefined)
             return;
 
-        song.pause();
+    this.song.pause();
 }
 
 Transport.prototype.seek = function(seconds) {
+	var oldstate = this.playing;
+	this.pause();
 	this.song.currentTime = seconds;
-    return this.getPos();
+	
+	if (oldstate) 
+		this.play();
+	
+	return this.getPos();
 }
-
