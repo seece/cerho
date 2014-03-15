@@ -39,15 +39,6 @@ function Transport(song, bpm) {
         song.play();
     }
 
-    this.pause = function() {
-        this.playing = false;
-
-        if (this.song === undefined)
-            return;
-
-        song.pause();
-    }
-
     this.togglePlaying = function() {
 
         if (this.playing) {
@@ -57,20 +48,20 @@ function Transport(song, bpm) {
         }
     }
 
-    this.seekTo = function(secs) {
-        song.currentTime = secs;
-    }
-
     this.playstart = this.getPos();
 }
 
-
 Transport.prototype.pause = function() {
-    this.pos = getPos();
     this.playing = false;
+
+        if (this.song === undefined)
+            return;
+
+        song.pause();
 }
 
 Transport.prototype.seek = function(seconds) {
+	this.song.currentTime = seconds;
     return this.getPos();
 }
 

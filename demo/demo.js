@@ -167,7 +167,7 @@ var Demo = (function($, assets, glul, utils) {
     var setupHotkeys = function(listener) {
         var keyfuncs = {
             "space" : function () {transport.togglePlaying();},
-            "backspace" : function () {console.log("scrub to beginning"); transport.seekTo(0)},
+            "q" : function () {console.log("scrub to beginning"); transport.seek(0)},
             "r" : function () {console.log("reload")}
         };
 
