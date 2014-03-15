@@ -82,7 +82,7 @@ Transport.prototype.pause = function() {
 Transport.prototype.seek = function(seconds) {
 	var oldstate = this.playing;
 	this.pause();
-	this.song.currentTime = seconds;
+	this.song.currentTime = Math.min(seconds, this.song.duration-0.001);
 	
 	if (oldstate) 
 		this.play();
