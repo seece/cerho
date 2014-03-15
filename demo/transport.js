@@ -47,6 +47,22 @@ function Transport(song, bpm) {
             this.play();
         }
     }
+	
+	this.toggleMute = function() {
+		if (song.volume == 0.0) {
+			song.volume = 1.0;
+		} else {
+			song.volume = 0.0
+		}
+	}
+	
+	this.getSong = function() {
+		return this.song;
+	}
+	
+	this.isPlaying = function() {
+		return this.playing;
+	}
 
     this.playstart = this.getPos();
 }

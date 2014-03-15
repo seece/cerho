@@ -14,5 +14,19 @@ body {
     right: 0px;
     padding: 0px;
     display: block;
-   
+}
+
+#debugview {
+	font-family:monospace;
+	height:60px;
+	background-color:#222;
+}
+
+#debugview > li {
+	display:block;
+	border:1px solid white;
+	width:120px;
+	float:left;
+	padding:5px;
+	position:relative;
 }

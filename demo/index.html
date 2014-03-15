@@ -16,15 +16,17 @@
 </head>
 
 <body>
+<ul id="debugview" style="display:none;">
+	<li><span id="debugmode"></span></li>
+	<li><span id="frametime">freimtime</span></li>
+	<li>volume: <span id="volume"></span></li>
+	<li><span id="playstate"></span></li>
+	<li>TIME: <span id="time"></span></li>
+	<li>BEATS: <span id="beats"></span></li>
+</ul>
 <canvas id="viewport">
 
 </canvas>
-
-<br>
-<span id="frametime"></span>
-<br>
-<span id="error"></span>
-
 <script>
 function viewwidth(){
    return window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth||0;
@@ -38,7 +40,7 @@ var initialize = function (demodata) {
 	var query = currLocation.split("?")[1];
 
 	var demo = Demo;
-	if (query.search("debug") != -1) {
+	if (query && query.search("debug") != -1) {
 		demo.setDebugMode(true);
 	}
 

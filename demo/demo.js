@@ -173,17 +173,45 @@ var Demo = (function($, assets, glul, utils) {
             "left" : function () {transport.seek(transport.getPos() - seekspeed)},
 			"shift right" : function () {transport.seek(transport.getPos() + seekspeed*2.0)},
             "shift left" : function () {transport.seek(transport.getPos() - seekspeed*2.0)},
-            "r" : function () {console.log("reload")}
+            "r" : function () {console.log("reload")},
+            "m" : function () {transport.toggleMute()}
         };
 
         utils.mapmap(keyfuncs, function (combo, func, list) {
             listener.simple_combo(combo, func);
         });
     }
+	
+	var setupDebugView = function(identifier) {
+		$(identifier).show();
+		$("#debugmode").html("debug enabled");
+	}
+	
+	var updateDebugView = function() {
+		var frametime = prof.entries["render"].diff;
+		
+		var beat = transport.getBeat();
+		
+		$("#frametime").html((Math.round(frametime * 100) / 100)  + " ms");
+		$("#volume").html(transport.getSong().volume*100.0 + "%");
+		$("#playstate").html(transport.isPlaying() ? "PLAYING" : "PAUSED");
+		$("#time").html((Math.round(transport.getPos() * 100) / 100) + " s");
+		$("#beats").html((Math.round(beat * 100) / 100) + " beats");
+		
+		var c = Math.round((1.0-(beat - Math.floor(beat)))*255);
+		
+		$("#beats").css("background-color", "rgb("+c+","+0+","+0+")");
+		//$("#beatmeter").html(c);
+		
+	}
 
 	demo.init = function(viewportElement, demodata, success) {
 		console.log("Initializing");
 		prof.begin("init");
+		if (debugModeEnabled) {
+			setupDebugView("#debugview");
+		}
+		
 		gl = glul.initGL(viewportElement);
 
         $(viewportElement).on("mousemove", function (e) {
@@ -213,8 +241,13 @@ var Demo = (function($, assets, glul, utils) {
 	}
 
 	demo.update = function () {
+		prof.begin("render");
 		demo.draw();
+		prof.end("render");
 		window.requestAnimationFrame(demo.update);
+		
+		if (debugModeEnabled)
+			updateDebugView();
 	}
 
     var setFloatUniform = function (prog, name, value) {
