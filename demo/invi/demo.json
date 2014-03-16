@@ -26,6 +26,10 @@
 		
 		"text" : []
 	},
+
+    "textureslots" : {
+        "0" : "eka.png"
+    },
 	
 	"effects" : {
 		"punainen" : {
@@ -65,6 +69,7 @@
 				"testparam" : 1.0
 			}
 			},
+
 			{
 			"effect" : "glowingmetaballs",
 			"begin" : 5.0,
@@ -72,6 +77,7 @@
 			"params" : { 
 			}
 			},
+
 			{
 			"effect" : "black_metaballs",
 			"begin" : 15.0,
@@ -79,6 +85,7 @@
 			"params" : { 
 			}
 			},
+
 			{
 			"effect" : "colorful_metaballs",
 			"begin" : 25.0,
@@ -86,6 +93,7 @@
 			"params" : { 
 			}
 			},
+
 			{
 			"effect" : "sininen",
 			"begin" : 35.0,

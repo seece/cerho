@@ -41,8 +41,15 @@ var Utils = (function ($){
 
 	});  
 
+    function assert(condition, message) {
+        if (!condition) {
+            throw message || "Assertion failed";
+        }
+    }
+                
     utils.mapmap = mapmap;
     utils.getNow = getNow;
+    utils.assert = assert;
 
     return utils;
 })($);

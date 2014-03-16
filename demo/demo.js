@@ -6,6 +6,7 @@ var Demo = (function($, assets, glul, utils) {
 	var textures = {};
 	var vshader;
 	var shaders = {};
+    var assert = utils.assert;
 	
 	var mouse = {
 		pos : {x : 0, y : 0},
@@ -15,6 +16,7 @@ var Demo = (function($, assets, glul, utils) {
     var transport;
 	var programs = {}; 
 	var effects = {};
+    var textures = {};
 	var playlist = {};
 
 	var quadVerts;
@@ -70,6 +72,8 @@ var Demo = (function($, assets, glul, utils) {
 		return tex;
 	}
 
+    /* Generates OpenGL texture objects and saves them to 
+     * the textures-map with the basename as a key. */
 	var generateTextures = function(images) {
 		console.log("Generating images", images);
 
@@ -78,11 +82,13 @@ var Demo = (function($, assets, glul, utils) {
 				continue;
 			}
 
+            // All images need to be of power of two size
 			var params = {};
-			params[gl.TEXTURE_WRAP_S] = gl.CLAMP_TO_EDGE;
-			params[gl.TEXTURE_WRAP_T] = gl.CLAMP_TO_EDGE;
+			params[gl.TEXTURE_WRAP_S] = gl.REPEAT;
+			params[gl.TEXTURE_WRAP_T] = gl.REPEAT;
 			
 			var texture = createTexture(images[path], params);
+            textures[getBasename(path)] = texture;
 		}
 	}
 
@@ -146,7 +152,6 @@ var Demo = (function($, assets, glul, utils) {
 		quadInds = quad[1];
 
         utils.mapmap(programs, function (key, prog, list) {
-            console.log("utils.mapmap", key, prog, list);
 			gl.useProgram(prog);	
 			set2DVertexAttribPointer(prog, quadVerts.itemSize);
         });
@@ -156,6 +161,7 @@ var Demo = (function($, assets, glul, utils) {
         createEffects(data.effects);
 
         playlist = new Playlist(data.playlist);
+        setTextureUniforms(textures, data.textureslots);
 
 		prof.end("init");
 
@@ -271,6 +277,30 @@ var Demo = (function($, assets, glul, utils) {
         gl.uniform1f(loc, value);
     }
 
+    var setTextureUniforms = function (texturemap, bindings) {
+
+        utils.mapmap(programs, function (progname, prog, list) {
+            gl.useProgram(prog);	
+            utils.mapmap(bindings, function (binding_id, texname, themap) {
+                if (!(texname in texturemap)) {
+                    return;
+                }
+
+                var tex = texturemap[texname];
+
+                var index = parseInt(binding_id);
+
+                assert(index >= 0, "Texture index should be greater than zero");
+                assert(index < 4, "Texture index should be less than four");
+
+                //console.log("activating texture ", index, texname, progname);
+                gl.activeTexture(gl.TEXTURE0 + index);
+                gl.bindTexture(gl.TEXTURE_2D, tex);
+                gl.uniform1i(gl.getUniformLocation(prog, "iChannel" + index), index);
+            });
+        });
+    }
+
     /* TODO add ShaderToy compatible uniforms here */
     var setCommonUniforms = function (entry, prog) {
         setFloatUniform(prog, "iGlobalTime", transport.getPos());
@@ -292,6 +322,7 @@ var Demo = (function($, assets, glul, utils) {
         var time = transport.getPos();
 		var entry = playlist.getCurrent(time);
 		debugState.currentEntry = entry;
+
 		
 		if (entry)
 			debugState.currentEffect = entry.effect;
