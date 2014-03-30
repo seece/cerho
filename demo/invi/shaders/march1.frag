@@ -22,7 +22,7 @@ float pallo(vec3 pos){
 }
 
 float scene(vec3 pos){
-	return smin(maa(pos),pallo(pos-vec3(0.0,sin(iGlobalTime),0.0)),8.0)*0.2;	
+	return smin(maa(pos),pallo(pos-vec3(0.0,sin(iLocalTime),0.0)),8.0)*0.2;	
 }
 
 float march(vec3 cam, vec3 dir){
@@ -40,7 +40,7 @@ void main(void)
 	vec2 uv = gl_FragCoord.xy / iResolution.xy*2.0-1.0;
 	uv.y*=iResolution.y/iResolution.x;
 	
-	vec3 cam=vec3(sin(iGlobalTime*1.7676),0.0,-2.0-5.0/iGlobalTime);
+	vec3 cam=vec3(sin(iLocalTime*1.7676),0.0,-2.0-5.0/iLocalTime);
 	
 	vec3 dir=normalize(vec3(uv,1.0));
 	

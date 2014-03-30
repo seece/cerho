@@ -302,8 +302,10 @@ var Demo = (function($, assets, glul, utils) {
     }
 
     /* TODO add ShaderToy compatible uniforms here */
-    var setCommonUniforms = function (entry, prog) {
+    var setCommonUniforms = function (entry, prog, beginTime) {
         setFloatUniform(prog, "iGlobalTime", transport.getPos());
+		
+        setFloatUniform(prog, "iLocalTime", transport.getPos()-beginTime);
         setFloatUniform(prog, "beat", transport.getBeat());
         
         var resLoc = gl.getUniformLocation(prog, "iResolution");
@@ -339,7 +341,7 @@ var Demo = (function($, assets, glul, utils) {
 		} 
 
         effects[entry.effect].render(entry.params, function (prog) {
-            setCommonUniforms(entry, prog);
+            setCommonUniforms(entry, prog,entry.begin);
             set2DVertexAttribPointer(prog);
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, quadInds)
             gl.drawElements(gl.TRIANGLES, quadInds.numItems, gl.UNSIGNED_SHORT, 0);
