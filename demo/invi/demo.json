@@ -21,7 +21,8 @@
 			"shaders/blue.frag",
 			"shaders/glowingmetaballs.frag",
 			"shaders/black_metaballs.frag",
-			"shaders/colorful_metaballs.frag"
+			"shaders/colorful_metaballs.frag",
+			"shaders/varijutska.frag"
 		],
 		
 		"text" : []
@@ -38,6 +39,10 @@
 		},
 		"march1" : {
 			"shader" : "march1.frag",
+			"params" : {}
+		},
+		"varijutska" : {
+			"shader" : "varijutska.frag",
 			"params" : {}
 		},
 		"sininen" : {
@@ -103,8 +108,17 @@
 
 			{
 			"effect" : "sininen",
+			"begin" : 45.0,
+			"end" : 50.0,
+			"params" : {
+				"flash" : 0.2
+			}
+			},
+
+			{
+			"effect" : "varijutska",
 			"begin" : 35.0,
-			"end" : 40.0,
+			"end" : 45.0,
 			"params" : {
 				"flash" : 0.2
 			}
